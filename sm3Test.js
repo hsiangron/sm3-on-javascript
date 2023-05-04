@@ -1,9 +1,12 @@
-import { Person } from './core/sm3.js';
+import {SM3} from './core/sm3.js';
+
 /*
 一个测试样例
-输入：这是一段需要加密的原文
-输出：7503FE4B33EF72F4775A743E1B8D7B94527E10E3F55B204958C2637AF55F7261
+输入：helloworld
+输出：c70c5f73da4e8b8b73478af54241469566f6497e16c053a03a0170fa00078283
 */
 
-const john = new Person('John', 30);
-john.sayHello(); // 输出：Hello, my name is John and I am 30 years old.
+let sm3 = new SM3();
+let msg = "helloworld";
+let hash = sm3.sm3(msg);
+console.log(hash); // "66C7F0F4B9E9755B9F2D6AEFFB8BAA0B8D1F6AB8"
