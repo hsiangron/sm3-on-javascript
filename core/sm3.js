@@ -19,12 +19,12 @@ export class SM3 {
     //将十六进制转换为二进制
     Hex2Bin(str) {
         let result = "";
-        for (let i = 0; i < str.length; i += 2) {
+        for (let i = 0; i < len(str); i += 2) {
             result += String.fromCharCode(parseInt(str.substr(i, 2), 16));
         }
         return result;
     }
-
+ 
     //将二进制转为十进制
     Bin2Dec(str) {
         let result = 0;
@@ -154,8 +154,8 @@ export class SM3 {
 
     //实现对2^32次方取模
     modAdd(str1, str2) {
-        let res1 = HexToBin(str1);
-        let res2 = HexToBin(str2);
+        let res1 = this.Hex2Bin(str1);
+        let res2 = this.Hex2Bin(str2);
         let temp = '0';
         let res = "";
         for (let i = res1.length - 1; i >= 0; i--) {
@@ -167,17 +167,17 @@ export class SM3 {
                 else 
                 temp = '0';
         }
-        return BinToHex(res);
+        return this.Bin2Hex(res);
     }
 
     //实现置换功能P0（X）   
     P0(str) {
-        return XOR(XOR(str, LeftShift(str, 9)), LeftShift(str, 17));
+        return this.XOR(this.XOR(str, this.leftShift(str, 9)), this.leftShift(str, 17));
     }   
 
     //实现置换功能P1（X）
     P1(str) {
-        return XOR(XOR(str, LeftShift(str, 15)), LeftShift(str, 23));
+        return this.XOR(this.XOR(str, this.leftShift(str, 15)), this.leftShift(str, 23));
     }
 
     //返回Tj常量值的函数实现
@@ -192,19 +192,19 @@ export class SM3 {
     //实现布尔函数FF功能
     FF(X, Y, Z, i) {
         if (i >= 0 && i <= 15) {
-            return XOR(XOR(X, Y), Z);
+            return this.XOR(this.XOR(X, Y), Z);
         } else if (i >= 16 && i <= 63) {
-            return OR(OR(AND(X, Y), AND(X, Z)), AND(Y, Z));
+            return this.OR(this.OR(this.AND(X, Y), this.AND(X, Z)), this.AND(Y, Z));
         }
     }
 
     //实现布尔函数GG功能
     GG(X, Y, Z, i) {
         if(i >= 0 && i <= 15) {
-            return XOR(XOR(X, Y), Z);
+            return this.XOR(this.XOR(X, Y), Z);
         }
         else if(i >= 16 && i <= 63) {
-            return OR(OR(AND(X, Y), AND(~X, Z)), AND(~X, Y));
+            return this.OR(this.OR(this.AND(X, Y), this.AND(~X, Z)), this.AND(~X, Y));
         }
     }
     
@@ -212,7 +212,7 @@ export class SM3 {
     extension(str) {
         let res = str;
         for (let i = 16; i < 68; i++) {
-            res += this.XOR(this.XOR(this.P1(this.XOR(this.XOR(res.substr((i-16)*8,8), res.substr((i - 9) * 8, 8)), this.LeftShift(res.substr((i - 3) * 8, 8), 15))), this.LeftShift(res.substr((i - 13) * 8, 8), 7)), res.substr((i - 6) * 8, 8));
+            res += this.XOR(this.XOR(this.P1(this.XOR(this.XOR(res.substr((i-16)*8,8), res.substr((i - 9) * 8, 8)), this.leftShift(res.substr((i - 3) * 8, 8), 15))), this.leftShift(res.substr((i - 13) * 8, 8), 7)), res.substr((i - 6) * 8, 8));
         }
 
         for (let i = 0; i < 64; i++) {
@@ -232,18 +232,21 @@ export class SM3 {
         let F1 = str1.substr(40, 8);
         let G1 = str1.substr(48, 8);
         let H1 = str1.substr(56, 8);
-        SS1 = "", SS2 = "", TT1 = "", TT2 = "";
+        let SS1 = "";
+        let SS2 = "";
+        let TT1 = "";
+        let TT2 = "";
         for(let i=0; i<64; i++) {
-            SS1= LeftShift(modAdd(modAdd(LeftShift(A1, 12), E1), LeftShift(Tj(i), i)), 7);
-            SS2= XOR(SS1, LeftShift(A1, 12));
-            TT1= modAdd(modAdd(modAdd(modAdd(FF(A1, B1, C1, i), D1), SS2), this.extension(str2).substr(8*i, 8)), this.Tj(i));
-            TT2= modAdd(modAdd(modAdd(modAdd(GG(E1, F1, G1, i), H1), SS1), this.extension(str2).substr(8*i, 8)), this.Tj(i+4));
+            SS1= this.leftShift(this.modAdd(this.modAdd(this.leftShift(A1, 12), E1), this.leftShift(this.Tj(i), i)), 7);
+            SS2= this.XOR(SS1, this.leftShift(A1, 12));
+            TT1= this.modAdd(this.modAdd(this.modAdd(this.modAdd(this.FF(A1, B1, C1, i), D1), SS2), this.extension(str2).substr(8*i, 8)), this.Tj(i));
+            TT2= this.modAdd(this.modAdd(this.modAdd(this.modAdd(this.GG(E1, F1, G1, i), H1), SS1), this.extension(str2).substr(8*i, 8)), this.Tj(i+4));
             D1=C1;
-            C1= LeftShift(B1, 9);
+            C1= this.leftShift(B1, 9);
             B1=A1;
             A1=TT1;
             H1=G1;
-    		G1 = LeftShift(F1, 19);
+    		G1 = this.leftShift(F1, 19);
 		    F1 = E1;        
             E1 = this.P0(TT2);
         }
@@ -258,7 +261,7 @@ export class SM3 {
             let  B = str.substr(i * 128, 128);
             let extensionB = this.extension(B);
             let compressB = this.compress(extensionB, V);
-            V = XOR(V, compressB);
+            V = this.XOR(V, compressB);
         }
         return V;
     }
