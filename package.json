@@ -1,9 +1,9 @@
 {
-  "name": "sm3-hash",
+  "name": "sm3",
   "version": "1.0",
   "description": "",
   "type": "module",
-  "main": "sm3Test.js",
+  "main": "test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
