@@ -1,7 +1,15 @@
 # sm3-on-javascript
 
-本项目为《密码学基础》课程项目，使用 JavaScript 实现国密 SM3 密码杂凑算法。在实现过程中遵循 SM3 算法规范，可在 Node.js 环境下运行，支持对输入消息进行杂凑计算并输出 256 位哈希值。
+sm3-on-javascript is a course project for the "Fundamentals of Cryptography" class. This project implements the **SM3 cryptographic hash algorithm** in JavaScript following the official SM3 specification. It can be run in a Node.js environment and supports hashing arbitrary input messages to produce a **256-bit hash**.
 
-## 运行环境
-- JavaScript（ES6）
-- Node.js
+## Features
+
+- Implementation of the **SM3 hash algorithm** according to the official standard.
+- Input messages can be hashed to **256-bit outputs**.
+- Compatible with **Node.js**.
+- Lightweight and easy to integrate into other JavaScript projects.
+
+## Environment
+
+- **Language:** JavaScript (ES6)
+- **Runtime:** Node.js
